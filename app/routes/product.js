@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 const router = Router()
 
 router.get('/products', async (req, res) => {
-  const products = await Product.get()
+  const products = await prisma.product.findMany()
   res.json(products)
 })
 
@@ -19,7 +19,9 @@ router.get('/products/:id', async (req, res) => {
   }
 
   try {
-    const product = await Product.find(productId)
+    const product = await prisma.product.findUnique({
+      where: { id: Number(productId) }
+    })
     res.json(product)
   } catch (err) {
     res.status(404).json({ message: 'Not found' })
